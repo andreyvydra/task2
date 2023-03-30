@@ -42,7 +42,7 @@ class FullGroupAPIView(APIView, GettingGroups):
             result = GroupSerializer(group).data
             participants_list = []
             for elem in participants:
-                participant = Participant.objects.filter(id=elem.recipient).first()
+                participant = Participant.objects.filter(id=elem.recipient.id).first()
                 cur_dict = {
                     "id": elem.id,
                     "name": elem.name,
@@ -105,7 +105,7 @@ class TossAPIView(APIView, GettingGroups):
         groups = self.get_objects(**kwargs)
         if groups:
             group = groups[0]
-            participants = [i for i in ParticipantGroup.objects.filter(group=group)]
+            participants = [i.participant for i in ParticipantGroup.objects.filter(group=group)]
             if len(participants) >= 3:
                 participants_for_choosing = [i for i in participants]
                 for participant in participants:
